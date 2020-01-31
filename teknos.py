@@ -34,9 +34,8 @@ ball.color("black")
 ball.penup()
 ball.goto(0,0)
 #változók
-ball.valtozoX = -1
+ball.valtozoX = 1
 ball.valtozoY = -1
-
 def bal_uto_up():
     y = balUto.ycor()
     y+=30 # y=y+30
@@ -68,7 +67,33 @@ ablak.listen()
 while True:
     # a képernyő frissítése
     ablak.update() 
-    #a labdát figyeli, az aktuális pozicíójához ad hozzá vagy vesz el
+    # a labdát figyeli, az aktuális pozicíójához ad hozzá vagy vesz el
     ball.setx(ball.xcor() + ball.valtozoX)
     ball.sety(ball.ycor() - ball.valtozoY)
+    # a labda elegánsan pattanjon vissza az oldal tetejéről 
+    if ball.ycor() > 288:
+        ball.sety(288)
+        ball.valtozoY *= -1
+    # a labda az X oldalról az Origóra visszamegy    
+    if ball.xcor() > 388:
+        ball.goto(0,0)
+        ball.valtozoX *= -1
 
+    # a labda elegánsan pattanjon vissza az oldal aljáról        
+    if ball.ycor() < -288:
+        ball.sety(-288)
+        ball.valtozoY *= -1
+
+    # a labda az X oldalról az Origóra visszamegy      
+    if ball.xcor() < -388:
+        ball.goto(0,0)
+        ball.valtozoX *= -1
+
+    # visszapattan a jobb oldali ütőről
+    if jobb.xcor()-20 < ball.xcor() < jobb.xcor() and jobb.ycor()-40 < ball.ycor() < jobb.ycor()+40:
+        ball.setx(jobb.xcor()-20)
+        ball.valtozoX *=-1
+    # visszapattan a bal oldali ütőről
+    if balUto.xcor()+20 > ball.xcor() > balUto.xcor() and balUto.ycor()-40 < ball.ycor() < balUto.ycor()+40:
+        ball.setx(balUto.xcor()+20)
+        ball.valtozoX *=-1

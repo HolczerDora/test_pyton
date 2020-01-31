@@ -2,98 +2,128 @@ import turtle
 
 # ABLAK
 
-ablak = turtle.Screen()
-ablak.setup(width=800,height=600)
-ablak.bgcolor("purple")
-ablak.title("Pong Game")
-ablak.tracer()
+window = turtle.Screen()
+window.setup(width=800,height=600)
+window.bgcolor("purple")
+window.title("Pong Game")
+window.tracer()
 
 # Bal oldali ütő
-balUto = turtle.Turtle()
-balUto.speed(0)
-balUto.shape("square")
-balUto.shapesize(stretch_wid=5,stretch_len=1)
-balUto.color("white")
-balUto.penup()
-balUto.goto(-350,0)
+
+rightSite = turtle.Turtle()
+rightSite.speed(0)
+rightSite.shape("square")
+rightSite.shapesize(stretch_wid=5,stretch_len=1)
+rightSite.color("blue")
+rightSite.penup()
+rightSite.goto(-350,0)
 
 # Jobb oldali ütő
-jobb = turtle.Turtle()
-jobb.speed(0)
-jobb.shape("square")
-jobb.shapesize(stretch_wid=5,stretch_len=1)
-jobb.color("white")
-jobb.penup()
-jobb.goto(350,0)
+
+leftSite = turtle.Turtle()
+leftSite.speed(0)
+leftSite.shape("square")
+leftSite.shapesize(stretch_wid=5,stretch_len=1)
+leftSite.color("orange")
+leftSite.penup()
+leftSite.goto(350,0)
 
 # Ball
+
 ball = turtle.Turtle()
 ball.speed(0)
 ball.shape("circle")
 ball.color("black")
 ball.penup()
 ball.goto(0,0)
-#változók
-ball.valtozoX = 1
-ball.valtozoY = -1
+
+# Pontszámok
+
+right_score = 0
+left_score = 0
+score = turtle.Turtle()
+score.speed(0)
+score.color("white")
+score.penup()
+score.hideturtle()
+score.goto(0,260)
+score.write(f"Player_Right:{right_score} Player_Left:{left_score}", align="center", font=("arial", 18, "normal"))
+
+# Változók
+
+ball.varX = 2
+ball.varY = -2
+
 def bal_uto_up():
-    y = balUto.ycor()
+    y = rightSite.ycor()
     y+=30 # y=y+30
-    balUto.sety(y)
+    rightSite.sety(y)
 
 def bal_uto_down():
-    y = balUto.ycor()
+    y = rightSite.ycor()
     y-=30 # y=y-30
-    balUto.sety(y)    
+    rightSite.sety(y)    
 
 def jobb_uto_up():
-    y = jobb.ycor()
+    y = leftSite.ycor()
     y+=30 # y=y+30
-    jobb.sety(y) 
+    leftSite.sety(y) 
 
 def jobb_uto_down():
-    y = jobb.ycor()
+    y = leftSite.ycor()
     y-=30 # y=y-30
-    jobb.sety(y)       
+    leftSite.sety(y)       
 
-ablak.onkey(bal_uto_up,"e")
-ablak.onkey(bal_uto_down,"f")
-ablak.onkey(jobb_uto_up,"p")
-ablak.onkey(jobb_uto_down,"l")
+window.onkey(bal_uto_up,"d")
+window.onkey(bal_uto_down,"c")
+window.onkey(jobb_uto_up,"k")
+window.onkey(jobb_uto_down,"m")
 
 # a képernyő figyelése
-ablak.listen()
+window.listen()
 
 while True:
     # a képernyő frissítése
-    ablak.update() 
+
+    window.update() 
+
     # a labdát figyeli, az aktuális pozicíójához ad hozzá vagy vesz el
-    ball.setx(ball.xcor() + ball.valtozoX)
-    ball.sety(ball.ycor() - ball.valtozoY)
-    # a labda elegánsan pattanjon vissza az oldal tetejéről 
-    if ball.ycor() > 288:
-        ball.sety(288)
-        ball.valtozoY *= -1
-    # a labda az X oldalról az Origóra visszamegy    
+    ball.setx(ball.xcor() + ball.varX)
+    ball.sety(ball.ycor() - ball.varY) # a labda elegánsan pattanjon vissza az oldal tetejéről 
+    if ball.ycor() > 285:
+        ball.sety(285)
+        ball.varY *= -1
+
+    # a labda az jobb oldalról az Origóra visszamegy    
     if ball.xcor() > 388:
         ball.goto(0,0)
-        ball.valtozoX *= -1
+        ball.varX *= -1
+        right_score +=1
+        score.clear()
+        score.write(f"Player_Right:{right_score} Player_Left:{left_score}",
+         align="center", font=("arial", 18, "normal"))
+
 
     # a labda elegánsan pattanjon vissza az oldal aljáról        
-    if ball.ycor() < -288:
-        ball.sety(-288)
-        ball.valtozoY *= -1
+    if ball.ycor() < -285:
+        ball.sety(-285)
+        ball.varY *= -1
 
     # a labda az X oldalról az Origóra visszamegy      
     if ball.xcor() < -388:
         ball.goto(0,0)
-        ball.valtozoX *= -1
+        ball.varX *= -1
+        left_score +=1
+        score.clear()
+        score.write(f"Player_Right:{right_score} Player_Left:{left_score}",
+         align="center", font=("arial", 18, "normal"))
 
     # visszapattan a jobb oldali ütőről
-    if jobb.xcor()-20 < ball.xcor() < jobb.xcor() and jobb.ycor()-40 < ball.ycor() < jobb.ycor()+40:
-        ball.setx(jobb.xcor()-20)
-        ball.valtozoX *=-1
+    if leftSite.xcor()-20 < ball.xcor() < leftSite.xcor() and leftSite.ycor()-40 < ball.ycor() < leftSite.ycor()+40:
+        ball.setx(leftSite.xcor()-20)
+        ball.varX *=-1
+
     # visszapattan a bal oldali ütőről
-    if balUto.xcor()+20 > ball.xcor() > balUto.xcor() and balUto.ycor()-40 < ball.ycor() < balUto.ycor()+40:
-        ball.setx(balUto.xcor()+20)
-        ball.valtozoX *=-1
+    if rightSite.xcor()+20 > ball.xcor() > rightSite.xcor() and rightSite.ycor()-40 < ball.ycor() < rightSite.ycor()+40:
+        ball.setx(rightSite.xcor()+20)
+        ball.varX *=-1
